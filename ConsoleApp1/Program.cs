@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+
 internal static partial class Program
 {
     public static void Main(string[] args)
@@ -197,15 +199,26 @@ internal static partial class Program
 
     public static void task1()
     {
-        var element = new List<int>();
-        element = (List<int>)generateNumberList("random", 10);
+        string str = "Code";
 
-        writeToConsole(new string[] { "List: " + string.Join(", ", element), "Largest value in List: " + task1_func(element) });
+        writeToConsole(new string[] { "String: " + str, "First non-repeated character: " + task1_func(str) });
     }
 
-    public static int task1_func(List<int> element)
+    private static char task1_func(string input)
     {
-        return element.Max();
+        input = input.ToLower();
+
+        for (int i = 0; i < input.Length; i++)
+        {
+            char c = input[i];
+
+            if (input.IndexOf(c) == input.LastIndexOf(c))
+            {
+                return c;
+            }
+        }
+
+        return ' ';
     }
 
     public static void task2()
@@ -213,34 +226,51 @@ internal static partial class Program
         var element = new List<int>();
         element = (List<int>)generateNumberList("linear", 10);
 
-        writeToConsole(new string[] { "List: " + string.Join(", ", element) });
-
-        task2_func(ref element);
-
-        writeToConsole(new string[] { "Reversed List: " + string.Join(", ", element) });
+        writeToConsole(new string[] { "List: " + string.Join(", ", element), "Second highest number: " + task2_func(element.ToArray()) });
     }
 
-    public static void task2_func(ref List<int> element)
+    public static int task2_func(int[] input)
     {
-        element.Reverse();
+        int max = int.MinValue;
+        int secondMax = int.MinValue;
+
+        for (int i = 0; i < input.Length; i++)
+        {
+            if (input[i] > max)
+            {
+                secondMax = max;
+                max = input[i];
+            }
+            else if (input[i] > secondMax)
+            {
+                secondMax = input[i];
+            }
+        }
+
+        return secondMax;
     }
 
     public static void task3()
     {
-        var element = new List<int>();
+        var stringList = new List<string>(new[] { "Visual Basic", "Racecar", "Task", "Civic", "People", "Noon", "Algorithm", "Pop", "List", "Rotator", "Level" });
         Random rnd = new Random();
-        int randomNumber = (int)(rnd.Next(0, 15 + 1));
-        element = (List<int>)generateNumberList("linear", 10);
+        int randomNumber = (int)(rnd.Next(0, stringList.Count - 1));
 
-        writeToConsole(new string[] { "List: " + string.Join(", ", element), "Random Number: " + randomNumber, task3_func(element, randomNumber) ? "Number occurred in List" : "Number did not occur in List" });
+        writeToConsole(new string[] { "String: " + stringList[randomNumber], task3_func(stringList[randomNumber]) ? "String is palindrome" : "String is not palindrome" });
     }
 
-    public static bool task3_func(List<int> element, int randomNumber)
+    public static bool task3_func(string input)
     {
-        bool numberOccurred = false;
-        numberOccurred = element.Contains(randomNumber);
+        input = input.ToLower();
+        for (int i = 0; i < input.Length / 2; i++)
+        {
+            if (input[i] != input[input.Length - i - 1])
+            {
+                return false;
+            }
+        }
 
-        return numberOccurred;
+        return true;
     }
 
     public static void task4()
@@ -248,36 +278,69 @@ internal static partial class Program
         var element = new List<int>();
         element = (List<int>)generateNumberList("random", 10);
 
-        writeToConsole(new string[] { "List: " + string.Join(", ", element), "Element in Odd Positions: " + string.Join(", ", task4_func(element)) });
+        writeToConsole(new string[] { "List: " + string.Join(", ", element), "Sum of all even numbers: " + task4_func(element.ToArray()) });
     }
 
-    public static List<int> task4_func(List<int> element)
+    public static int task4_func(int[] input)
     {
-        var oddElement = new List<int>();
-
-        for (int i = 0, loopTo = element.Count - 1; i <= loopTo; i++)
+        int sum = 0;
+        foreach (int num in input)
         {
-            if (!(i % 2 == 0))
+            if (num % 2 == 0)
             {
-                oddElement.Add(element[i]);
+                sum += num;
             }
         }
-
-        return oddElement;
+        return sum;
     }
 
     public static void task5()
     {
-        var element = new List<int>();
-        element = (List<int>)generateNumberList("random", 10);
+        int[][] element = new int[][] {
+            new int[] {1, 2, 3},
+            new int[] {4, 5, 6},
+            new int[] {7, 8, 9},
+        };
 
-        writeToConsole(new string[] { "List: " + string.Join(", ", element), "Sum: " + string.Join(", ", task5_func(element)) });
+        StringBuilder printStr = new StringBuilder();
+        printStr.Append("[");
+
+        for (int i = 0; i < element.GetLength(0); i++)
+        {
+            printStr.Append("[");
+
+            for (int j = 0; j < element[i].GetLength(0); j++)
+            {
+                printStr.Append(element[i][j].ToString());
+
+                if (j != element[i].GetLength(0) -1)
+                {
+                    printStr.Append(", ");
+                }
+            }
+
+            printStr.Append("]");
+
+            if (i != element.GetLength(0) - 1)
+            {
+                printStr.Append(", ");
+            }
+        }
+
+        printStr.Append("]");
+
+        writeToConsole(new string[] { "2D Array: " + printStr.ToString(), "Sum: " + task5_func(element) });
     }
-    public static int task5_func(List<int> element)
+    public static int task5_func(int[][] input)
     {
-        int sum = new int();
-        sum = element.Sum();
-
+        int sum = 0;
+        foreach (int[] row in input)
+        {
+            foreach (int n in row)
+            {
+                sum += n;
+            }
+        }
         return sum;
     }
 
@@ -287,166 +350,88 @@ internal static partial class Program
         Random rnd = new Random();
         int randomNumber = (int)(rnd.Next(0, stringList.Count - 1));
 
-        writeToConsole(new string[] { "String: " + stringList[randomNumber], task6_func(stringList, randomNumber) ? "String is Palindrome": "String is not Palindrome" });
+        writeToConsole(new string[] { "String: " + stringList[randomNumber], "String with vowels removed: " + task6_func(stringList[randomNumber]) });
     }
 
-    public static bool task6_func(List<string> stringList, int randomNumber)
+    public static string task6_func(string input)
     {
-        bool isPalindrome = false;
-
-        char[] charArray = stringList[randomNumber].ToLower().ToCharArray();
-        Array.Reverse(charArray);
-        string reversedStr = string.Join("", charArray);
-
-        if (stringList[randomNumber].ToLower() == reversedStr)
+        StringBuilder sb = new StringBuilder();
+        foreach (char c in input)
         {
-            isPalindrome = true;
-        }
-
-        return isPalindrome;
-    }
-
-    public static object task7()
-    {
-        var element = new List<int>();
-        element = (List<int>)generateNumberList("random", 10);
-
-        writeToConsole(new string[] { "List: " + string.Join(", ", element), "Sum using for-loop: " + task7_ForLoop(element), "Sum using while-loop: " + task7_WhileLoop(element), "Sum using recursion: " + task7_Recursion(element, 0) });
-
-        return element.Sum();
-    }
-
-    public static int task7_ForLoop(List<int> element)
-    {
-        int sumFor = new int();
-
-        foreach (int num in element)
-            sumFor += num;
-
-        return sumFor;
-    }
-
-    public static int task7_WhileLoop(List<int> element)
-    {
-        int sumWhile = new int();
-
-        bool hasNext = true;
-        int i = 0;
-
-        while (hasNext)
-        {
-            sumWhile += element[i];
-            i += 1;
-
-            if (element.Count == i)
+            if (!"aeiouAEIOU".Contains(c))
             {
-                hasNext = false;
+                sb.Append(c);
             }
         }
-
-        return sumWhile;
+        return sb.ToString();
     }
 
-    public static int task7_Recursion(List<int> element, int index)
+    public static void task7()
     {
-        if (index == element.Count - 1)
-        {
-            return element[index];
-        }
-        else
-        {
-            return element[index] + task7_Recursion(element, index + 1);
-        }
+        var stringList = new List<string>(new[] { "Apple", "Banana", "Cat", "Dog", "Fish", "Cherry", "Butterfly" });
+        Random rnd = new Random();
+        int randomNumber = (int)(rnd.Next(0, stringList.Count - 1));
+
+        writeToConsole(new string[] { "List: " + string.Join(", ", stringList), "String with at least 5 characters: " + string.Join(", ", task7_func(stringList)) });
+    }
+
+    public static List<string> task7_func(List<string> input)
+    {
+        return input.Where(s => s.Length >= 5).ToList();
     }
 
     public static void task8()
     {
-        var perfectSquares = new List<int>();
-
-        Func<int, int> square = x => x * x;
-        perfectSquares = on_all(square);
-
-        writeToConsole(new string[] { "Perfect Squares: " + string.Join(", ", perfectSquares) });
-    }
-
-    public static List<int> on_all(Func<int, int> func)
-    {
-        var resultList = new List<int>();
-
-        for (int i = 1; i <= 20; i++)
-            resultList.Add(func(i));
-
-        return resultList;
-    }
-
-    public static object task9()
-    {
         var element = new List<int>();
-        var element2 = new List<string>();
-        var resultList = new List<string>();
+        element = (List<int>)generateNumberList("random", 10);
 
-        element = (List<int>)generateNumberList("linear", 5);
-        element2 = new List<string>(new[] { "A", "B", "C", "D", "E" });
-        resultList = (List<string>)task9_func(element.ToArray(), element2.ToArray());
+        Random rng = new Random();
+        bool randomBool = rng.Next(2) == 1;
 
-        writeToConsole(new string[] { "List1: " + string.Join(", ", element), "List2: " + string.Join(", ", element2), "Combined List: " + string.Join(", ", resultList) });
-
-        return resultList;
-    }
-
-    public static object task9_func(Array list1, Array list2)
-    {
-        var resultList = new List<string>();
-
-        foreach (var item in list1)
-            resultList.Add(item.ToString());
-
-        foreach (var item in list2)
-            resultList.Add(item.ToString());
-
-        return resultList;
-    }
-
-    public static object task10()
-    {
-        var element = new List<int>();
-        var element2 = new List<string>();
-        var resultList = new List<string>();
-
-        element = (List<int>)generateNumberList("linear", 5);
-        element2 = new List<string>(new[] { "A", "B", "C", "D", "E" });
-        resultList = (List<string>)task10_func(element.ToArray(), element2.ToArray());
-
-        writeToConsole(new string[] { "List1: " + string.Join(", ", element), "List2: " + string.Join(", ", element2), "Combined List: " + string.Join(", ", resultList) });
-
-        return resultList;
-    }
-
-    public static object task10_func(Array list1, Array list2)
-    {
-        var resultList = new List<string>();
-
-        int i = list1.Length - 1;
-        int j = list2.Length - 1;
-        var loopLimit = i >= j ? i : j;
-        int loopIterator = 0;
-
-        while (loopIterator <= loopLimit)
+        if (randomBool)
         {
-            if (loopIterator <= i)
-            {
-                resultList.Add(list1.GetValue(loopIterator).ToString());
-            }
-
-            if (loopIterator <= j)
-            {
-                resultList.Add(list2.GetValue(loopIterator).ToString());
-            }
-
-            loopIterator += 1;
+            element.Sort();
         }
 
-        return resultList;
+        writeToConsole(new string[] { "List: " + string.Join(", ", element), task8_func(element) ? "List is sorted in ascending order" : "List is not sorted in ascending order" });
+    }
+
+    public static bool task8_func(List<int> input)
+    {
+        for (int i = 0; i < input.Count - 1; i++)
+        {
+            if (input[i] > input[i + 1])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void task9()
+    {
+        var element = new List<int>();
+        element = (List<int>)generateNumberList("random", 10);
+        element.Sort();
+
+        writeToConsole(new string[] { "List: " + string.Join(", ", element), "Second smallest number: " + task9_func(element) });
+    }
+
+    public static int task9_func(List<int> input)
+    {
+        return input.OrderBy(n => n).Skip(1).First();
+    }
+
+    public static void task10()
+    {
+        var stringList = new List<string>(new[] { "Apple", "Banana", "Level", "Cherry", "Date", "Pop", "Noon" });
+
+        writeToConsole(new string[] { "List: " + string.Join(", ", stringList), "Strings that start and end with same letter: " + string.Join(", ", task10_func(stringList)) });
+    }
+
+    public static List<string> task10_func(List<string> input)
+    {
+        return input.Where(s => s[0].ToString().ToLower() == s[s.Length - 1].ToString().ToLower()).ToList();
     }
 
 }
